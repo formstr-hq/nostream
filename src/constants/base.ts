@@ -26,6 +26,7 @@ export enum EventKinds {
   REPLACEABLE_LAST = 19999,
   // Ephemeral events
   EPHEMERAL_FIRST = 20000,
+  AUTH = 22242,
   EPHEMERAL_LAST = 29999,
   // Parameterized replaceable events
   PARAMETERIZED_REPLACEABLE_FIRST = 30000,
@@ -34,20 +35,24 @@ export enum EventKinds {
 }
 
 export enum EventTags {
-  Event = 'e',
-  Pubkey = 'p',
+  Event = "e",
+  Pubkey = "p",
   //  Multicast = 'm',
-  Deduplication = 'd',
-  Expiration = 'expiration',
-  Invoice = 'bolt11',
+  Deduplication = "d",
+  Expiration = "expiration",
+  Invoice = "bolt11",
+  Relay = "relay",
+  Challenge = "challenge",
 }
 
 export enum PaymentsProcessors {
-  LNURL = 'lnurl',
-  ZEBEDEE = 'zebedee',
-  LNBITS = 'lnbits',
+  LNURL = "lnurl",
+  ZEBEDEE = "zebedee",
+  LNBITS = "lnbits",
 }
 
-export const EventDeduplicationMetadataKey = Symbol('Deduplication')
-export const ContextMetadataKey = Symbol('Context')
-export const EventExpirationTimeMetadataKey = Symbol('Expiration')
+export const EventDelegatorMetadataKey = Symbol("Delegator");
+
+export const EventDeduplicationMetadataKey = Symbol("Deduplication");
+export const ContextMetadataKey = Symbol("Context");
+export const EventExpirationTimeMetadataKey = Symbol("Expiration");

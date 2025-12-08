@@ -35,6 +35,8 @@ paymentsProcessors:
   opennode:
     baseURL: api.opennode.com
     callbackBaseURL: https://nostream.your-domain.com/callbacks/opennode
+authentication:
+  enabled: true
 network:
   maxPayloadSize: 524288
   # Comment the next line if using CloudFlare proxy
@@ -129,7 +131,8 @@ limits:
             - 49
         period: 60000
         rate: 30
-      - description: 24 events/min for replaceable events and parameterized replaceable
+      - description:
+          24 events/min for replaceable events and parameterized replaceable
           events
         kinds:
           - - 10000

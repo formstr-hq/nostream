@@ -61,20 +61,24 @@ NIPs with a relay-specific implementation are listed here.
 - [x] NIP-28: Public Chat
 - [x] NIP-33: Parameterized Replaceable Events
 - [x] NIP-40: Expiration Timestamp
+- [x] NIP-42: Authentication of clients to relays
 
 ## Requirements
 
 ### Standalone setup
+
 - PostgreSQL 14.0
 - Redis
 - Node v18
 - Typescript
 
 ### Docker setups
+
 - Docker v20.10
 - Docker Compose v2.10
 
 ### Local Docker setup
+
 - Docker Desktop v4.2.0 or newer
 - [mkcert](https://github.com/FiloSottile/mkcert)
 
@@ -89,6 +93,7 @@ Install Docker from their [official guide](https://docs.docker.com/engine/instal
 ### Accepting Payments
 
 1. Before you begin
+
    - Complete one of the Quick Start guides in this document
    - Create a `.env` file
    - On `.nostr/settings.yaml` file make the following changes:
@@ -98,13 +103,14 @@ Install Docker from their [official guide](https://docs.docker.com/engine/instal
    - Choose one of the following payment processors: `zebedee`, `nodeless`, `opennode`, `lnbits`, `lnurl`
 
 2. [ZEBEDEE](https://zebedee.io)
+
    - Complete the step "Before you begin"
    - [Sign up for a ZEBEDEE Developer Dashboard account](https://dashboard.zebedee.io/signup), create a new LIVE Project, and get that Project's API Key
    - Set `ZEBEDEE_API_KEY` environment variable with the API Key above on your `.env` file
 
-    ```
-    ZEBEDEE_API_KEY={YOUR_ZEBEDEE_API_KEY_HERE}
-    ```
+   ```
+   ZEBEDEE_API_KEY={YOUR_ZEBEDEE_API_KEY_HERE}
+   ```
 
    - Follow the required steps for all payments processors
    - On `.nostr/settings.yaml` file make the following changes:
@@ -114,16 +120,17 @@ Install Docker from their [official guide](https://docs.docker.com/engine/instal
    - Read the in-depth guide for more information: [Set Up a Paid Nostr Relay with ZEBEDEE API](https://docs.zebedee.io/docs/guides/nostr-relay)
 
 3. [Nodeless](https://nodeless.io/?ref=587f477f-ba1c-4bd3-8986-8302c98f6731)
+
    - Complete the step "Before you begin"
    - [Sign up](https://nodeless.io/?ref=587f477f-ba1c-4bd3-8986-8302c98f6731) for a new account, create a new store and take note of the store ID
    - Go to Profile > API Tokens and generate a new key and take note of it
    - Create a store webhook with your Nodeless callback URL (e.g. `https://{YOUR_DOMAIN_HERE}/callbacks/nodeless`) and make sure to enable all of the events. Grab the generated store webhook secret
    - Set `NODELESS_API_KEY` and `NODELESS_WEBHOOK_SECRET` environment variables with generated API key and webhook secret, respectively
 
-    ```
-    NODELESS_API_KEY={YOUR_NODELESS_API_KEY}
-    NODELESS_WEBHOOK_SECRET={YOUR_NODELESS_WEBHOOK_SECRET}
-    ```
+   ```
+   NODELESS_API_KEY={YOUR_NODELESS_API_KEY}
+   NODELESS_WEBHOOK_SECRET={YOUR_NODELESS_WEBHOOK_SECRET}
+   ```
 
    - On your `.nostr/settings.yaml` file make the following changes:
      - Set `payments.processor` to `nodeless`
@@ -131,6 +138,7 @@ Install Docker from their [official guide](https://docs.docker.com/engine/instal
    - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
 
 4. [OpenNode](https://www.opennode.com/)
+
    - Complete the step "Before you begin"
    - Sign up for a new account and get verified
    - Go to Developers > Integrations and setup two-factor authentication
@@ -146,29 +154,32 @@ Install Docker from their [official guide](https://docs.docker.com/engine/instal
    - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
 
 5. [LNBITS](https://lnbits.com/)
-    - Complete the step "Before you begin"
-    - Create a new wallet on you public LNbits instance
-      - [Demo](https://legend.lnbits.com/) server must not be used for production
-      - Your instance must be accessible from the internet and have a valid SSL/TLS certificate
-    - Get wallet Invoice/read key (in Api docs section of your wallet)
-    - set `LNBITS_API_KEY` environment variable with the Invoice/read key Key above on your `.env` file
 
-      ```
-      LNBITS_API_KEY={YOUR_LNBITS_API_KEY_HERE}
-      ```
-    - On your `.nostr/settings.yaml` file make the following changes:
-      - Set `payments.processor` to `lnbits`
-      - set `lnbits.baseURL` to your LNbits instance URL (e.g. `https://{YOUR_LNBITS_DOMAIN_HERE}/`)
-      - Set `paymentsProcessors.lnbits.callbackBaseURL` to match your Nostream URL (e.g. `https://{YOUR_DOMAIN_HERE}/callbacks/lnbits`)
-    - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
+   - Complete the step "Before you begin"
+   - Create a new wallet on you public LNbits instance
+     - [Demo](https://legend.lnbits.com/) server must not be used for production
+     - Your instance must be accessible from the internet and have a valid SSL/TLS certificate
+   - Get wallet Invoice/read key (in Api docs section of your wallet)
+   - set `LNBITS_API_KEY` environment variable with the Invoice/read key Key above on your `.env` file
+
+     ```
+     LNBITS_API_KEY={YOUR_LNBITS_API_KEY_HERE}
+     ```
+
+   - On your `.nostr/settings.yaml` file make the following changes:
+     - Set `payments.processor` to `lnbits`
+     - set `lnbits.baseURL` to your LNbits instance URL (e.g. `https://{YOUR_LNBITS_DOMAIN_HERE}/`)
+     - Set `paymentsProcessors.lnbits.callbackBaseURL` to match your Nostream URL (e.g. `https://{YOUR_DOMAIN_HERE}/callbacks/lnbits`)
+   - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
 
 6. [Alby](https://getalby.com/) or any LNURL Provider with [LNURL-verify](https://github.com/lnurl/luds/issues/182) support
-    - Complete the step "Before you begin"
-    - [Create a new account](https://getalby.com/user/new) if you don't have an LNURL
-    - On your `.nostr/settings.yaml` file make the following changes:
-      - Set `payments.processor` to `lnurl`
-      - Set `lnurl.invoiceURL` to your LNURL (e.g. `https://getalby.com/lnurlp/your-username`)
-    - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
+
+   - Complete the step "Before you begin"
+   - [Create a new account](https://getalby.com/user/new) if you don't have an LNURL
+   - On your `.nostr/settings.yaml` file make the following changes:
+     - Set `payments.processor` to `lnurl`
+     - Set `lnurl.invoiceURL` to your LNURL (e.g. `https://getalby.com/lnurlp/your-username`)
+   - Restart Nostream (`./scripts/stop` followed by `./scripts/start`)
 
 7. Ensure payments are required for your public key
    - Visit https://{YOUR-DOMAIN}/
@@ -188,37 +199,43 @@ Install Docker following the [official guide](https://docs.docker.com/engine/ins
 You may have to uninstall Docker if you installed it using a different guide.
 
 Clone repository and enter directory:
-  ```
-  git clone git@github.com:Cameri/nostream.git
-  cd nostream
-  ```
+
+```
+git clone git@github.com:Cameri/nostream.git
+cd nostream
+```
 
 Generate a secret with: `openssl rand -hex 128`
 Copy the output and paste it into an `.env` file:
 
-  ```
-  SECRET=aaabbbccc...dddeeefff
-  # Secret shortened for brevity
-  ```
+```
+SECRET=aaabbbccc...dddeeefff
+# Secret shortened for brevity
+```
 
 Start:
-  ```
-  ./scripts/start
-  ```
-  or
-  ```
-  ./scripts/start_with_tor
-  ```
+
+```
+./scripts/start
+```
+
+or
+
+```
+./scripts/start_with_tor
+```
 
 Stop the server with:
-  ```
-  ./scripts/stop
-  ```
+
+```
+./scripts/stop
+```
 
 Print the Tor hostname:
-  ```
-  ./scripts/print_tor_hostname
-  ```
+
+```
+./scripts/print_tor_hostname
+```
 
 ### Running as a Service
 
@@ -226,258 +243,271 @@ By default this server will run continuously until you stop it with Ctrl+C or un
 
 You can [install as a systemd service](https://www.swissrouting.com/nostr.html#installing-as-a-service) if you want the server to run again automatically whenever the system is restarted. For example:
 
-  ```
-  $ nano /etc/systemd/system/nostream.service
+```
+$ nano /etc/systemd/system/nostream.service
 
-  # Note: replace "User=..." with your username, and
-  # "/home/nostr/nostream" with the directory where you cloned the repo.
+# Note: replace "User=..." with your username, and
+# "/home/nostr/nostream" with the directory where you cloned the repo.
 
-  [Unit]
-  Description=Nostr TS Relay
-  After=network.target
-  StartLimitIntervalSec=0
+[Unit]
+Description=Nostr TS Relay
+After=network.target
+StartLimitIntervalSec=0
 
-  [Service]
-  Type=simple
-  Restart=always
-  RestartSec=5
-  User=nostr
-  WorkingDirectory=/home/nostr/nostream
-  ExecStart=/home/nostr/nostream/scripts/start
-  ExecStop=/home/nostr/nostream/scripts/stop
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=nostr
+WorkingDirectory=/home/nostr/nostream
+ExecStart=/home/nostr/nostream/scripts/start
+ExecStop=/home/nostr/nostream/scripts/stop
 
-  [Install]
-  WantedBy=multi-user.target
-  ```
+[Install]
+WantedBy=multi-user.target
+```
 
 And then:
 
-  ```
-  systemctl enable nostream
-  systemctl start nostream
-  ```
+```
+systemctl enable nostream
+systemctl start nostream
+```
 
 The logs can be viewed with:
 
-  ```
-  journalctl -u nostream
-  ```
+```
+journalctl -u nostream
+```
 
 ## Quick Start (Standalone)
 
 Set the following environment variables:
 
-  ```
-  DB_URI="postgresql://postgres:postgres@localhost:5432/nostr_ts_relay_test"
-  DB_USER=postgres
-  ```
-  or
-  ```
-  DB_HOST=localhost
-  DB_PORT=5432
-  DB_NAME=nostr_ts_relay
-  DB_USER=postgres
-  DB_PASSWORD=postgres
-  ```
+```
+DB_URI="postgresql://postgres:postgres@localhost:5432/nostr_ts_relay_test"
+DB_USER=postgres
+```
 
-  ```
-  REDIS_URI="redis://default:nostr_ts_relay@localhost:6379"
+or
 
-  REDIS_HOST=localhost
-  REDIS_PORT=6379
-  REDIS_USER=default
-  REDIS_PASSWORD=nostr_ts_relay
-  ```
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=nostr_ts_relay
+DB_USER=postgres
+DB_PASSWORD=postgres
+```
+
+```
+REDIS_URI="redis://default:nostr_ts_relay@localhost:6379"
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_USER=default
+REDIS_PASSWORD=nostr_ts_relay
+```
 
 Generate a long random secret and set SECRET:
 You may want to use `openssl rand -hex 128` to generate a secret.
 
-  ```
-  SECRET=aaabbbccc...dddeeefff
-  # Secret shortened for brevity
-  ```
+```
+SECRET=aaabbbccc...dddeeefff
+# Secret shortened for brevity
+```
 
 ### Initializing the database
 
 Create `nostr_ts_relay` database:
 
-  ```
-  $ psql -h $DB_HOST -p $DB_PORT -U $DB_USER -W
-  postgres=# create database nostr_ts_relay;
-  postgres=# quit
-  ```
+```
+$ psql -h $DB_HOST -p $DB_PORT -U $DB_USER -W
+postgres=# create database nostr_ts_relay;
+postgres=# quit
+```
 
 Start Redis and use `redis-cli` to set the default password and verify:
-  ```
-  $ redis-cli
-  127.0.0.1:6379> CONFIG SET requirepass "nostr_ts_relay"
-  OK
-  127.0.0.1:6379> AUTH nostr_ts_relay
-  Ok
-  ```
+
+```
+$ redis-cli
+127.0.0.1:6379> CONFIG SET requirepass "nostr_ts_relay"
+OK
+127.0.0.1:6379> AUTH nostr_ts_relay
+Ok
+```
 
 Clone repository and enter directory:
-  ```
-  git clone git@github.com:Cameri/nostream.git
-  cd nostream
-  ```
+
+```
+git clone git@github.com:Cameri/nostream.git
+cd nostream
+```
 
 Install dependencies:
 
-  ```
-  npm install -g knex
-  npm install
-  ```
+```
+npm install -g knex
+npm install
+```
 
 Run migrations (at least once and after pulling new changes):
 
-  ```
-  NODE_OPTIONS="-r dotenv/config" npm run db:migrate
-  ```
+```
+NODE_OPTIONS="-r dotenv/config" npm run db:migrate
+```
 
 Create .nostr folder inside nostream project folder and copy over the settings file:
 
-  ```
-  mkdir .nostr
-  cp resources/default-settings.yaml .nostr/settings.yaml
-  ```
+```
+mkdir .nostr
+cp resources/default-settings.yaml .nostr/settings.yaml
+```
 
 To start in development mode:
 
-  ```
-  npm run dev
-  ```
+```
+npm run dev
+```
 
 Or, start in production mode:
 
-  ```
-  npm run start
-  ```
+```
+npm run start
+```
 
 To clean up the build, coverage and test reports run:
 
-  ```
-  npm run clean
-  ```
+```
+npm run clean
+```
+
 ## Development Quick Start (Docker Compose)
 
 Install Docker Desktop following the [official guide](https://docs.docker.com/desktop/).
 You may have to uninstall Docker on your machine if you installed it using a different guide.
 
 Clone repository and enter directory:
-  ```
-  git clone git@github.com:Cameri/nostream.git
-  cd nostream
-  ```
+
+```
+git clone git@github.com:Cameri/nostream.git
+cd nostream
+```
 
 Start:
-  ```
-  ./scripts/start_local
-  ```
 
-  This will run in the foreground of the terminal until you stop it with Ctrl+C.
+```
+./scripts/start_local
+```
+
+This will run in the foreground of the terminal until you stop it with Ctrl+C.
 
 ## Tests
 
 ### Unit tests
 
 Open a terminal and change to the project's directory:
-  ```
-  cd /path/to/nostream
-  ```
+
+```
+cd /path/to/nostream
+```
 
 Run unit tests with:
 
-  ```
-  npm run test:unit
-  ```
+```
+npm run test:unit
+```
 
 Or, run unit tests in watch mode:
 
-  ```
-  npm run test:unit:watch
-  ```
+```
+npm run test:unit:watch
+```
 
 To get unit test coverage run:
 
-  ```
-  npm run cover:unit
-  ```
+```
+npm run cover:unit
+```
 
 To see the unit tests report open `.test-reports/unit/index.html` with a browser:
-  ```
-  open .test-reports/unit/index.html
-  ```
+
+```
+open .test-reports/unit/index.html
+```
 
 To see the unit tests coverage report open `.coverage/unit/lcov-report/index.html` with a browser:
-  ```
-  open .coverage/unit/lcov-report/index.html
-  ```
+
+```
+open .coverage/unit/lcov-report/index.html
+```
 
 ### Integration tests (Docker Compose)
 
 Open a terminal and change to the project's directory:
-  ```
-  cd /path/to/nostream
-  ```
+
+```
+cd /path/to/nostream
+```
 
 Run integration tests with:
 
-  ```
-  npm run docker:test:integration
-  ```
+```
+npm run docker:test:integration
+```
 
 And to get integration test coverage run:
 
-  ```
-  npm run docker:cover:integration
-  ```
+```
+npm run docker:cover:integration
+```
 
 ### Integration tests (Standalone)
 
 Open a terminal and change to the project's directory:
-  ```
-  cd /path/to/nostream
-  ```
+
+```
+cd /path/to/nostream
+```
 
 Set the following environment variables:
 
-  ```
-  DB_URI="postgresql://postgres:postgres@localhost:5432/nostr_ts_relay_test"
+```
+DB_URI="postgresql://postgres:postgres@localhost:5432/nostr_ts_relay_test"
 
-  or
+or
 
-  DB_HOST=localhost
-  DB_PORT=5432
-  DB_NAME=nostr_ts_relay_test
-  DB_USER=postgres
-  DB_PASSWORD=postgres
-  DB_MIN_POOL_SIZE=1
-  DB_MAX_POOL_SIZE=2
-  ```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=nostr_ts_relay_test
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_MIN_POOL_SIZE=1
+DB_MAX_POOL_SIZE=2
+```
 
 Then run the integration tests:
 
-  ```
-  npm run test:integration
-  ```
+```
+npm run test:integration
+```
 
 To see the integration tests report open `.test-reports/integration/report.html` with a browser:
-  ```
-  open .test-reports/integration/report.html
-  ```
+
+```
+open .test-reports/integration/report.html
+```
 
 To get the integration test coverage run:
 
-  ```
-  npm run cover:integration
-  ```
+```
+npm run cover:integration
+```
 
 To see the integration test coverage report open `.coverage/integration/lcov-report/index.html` with a browser.
 
-  ```
-  open .coverage/integration/lcov-report/index.html
-  ```
+```
+open .coverage/integration/lcov-report/index.html
+```
 
 ## Configuration
 
@@ -489,6 +519,7 @@ Any changes made to the settings file will be read on the next start.
 Default settings can be found under `resources/default-settings.yaml`. Feel free to copy it to `nostream/.nostr/settings.yaml` if you would like to have a settings file before running the relay first.
 
 See [CONFIGURATION.md](CONFIGURATION.md) for a detailed explanation of each environment variable and setting.
+
 ## Dev Channel
 
 For development discussions, please use the [Nostr Typescript Relay Dev Group](https://t.me/nostream_dev).
