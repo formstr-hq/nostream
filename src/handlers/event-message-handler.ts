@@ -257,7 +257,9 @@ export class EventMessageHandler implements IMessageHandler {
 
   protected async isUserAdmitted(event: Event): Promise<string | undefined> {
     const currentSettings = this.settings()
-    if (!currentSettings.payments?.enabled) {
+    const requiresAdmission = currentSettings.payments?.enabled || currentSettings.authorization?.requireAdmission
+
+    if (!requiresAdmission) {
       return
     }
 
@@ -265,14 +267,16 @@ export class EventMessageHandler implements IMessageHandler {
       return
     }
 
-    const isApplicableFee = (feeSchedule: FeeSchedule) =>
-      feeSchedule.enabled
-      && !feeSchedule.whitelists?.pubkeys?.some((prefix) => event.pubkey.startsWith(prefix))
-      && !feeSchedule.whitelists?.event_kinds?.some(isEventKindOrRangeMatch(event))
+    if (currentSettings.payments?.enabled) {
+      const isApplicableFee = (feeSchedule: FeeSchedule) =>
+        feeSchedule.enabled
+        && !feeSchedule.whitelists?.pubkeys?.some((prefix) => event.pubkey.startsWith(prefix))
+        && !feeSchedule.whitelists?.event_kinds?.some(isEventKindOrRangeMatch(event))
 
-    const feeSchedules = currentSettings.payments?.feeSchedules?.admission?.filter(isApplicableFee)
-    if (!Array.isArray(feeSchedules) || !feeSchedules.length) {
-      return
+      const feeSchedules = currentSettings.payments?.feeSchedules?.admission?.filter(isApplicableFee)
+      if (!Array.isArray(feeSchedules) || !feeSchedules.length) {
+        return
+      }
     }
 
     // const hasKey = await this.cache.hasKey(`${event.pubkey}:is-admitted`)

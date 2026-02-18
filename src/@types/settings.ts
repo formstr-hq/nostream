@@ -20,6 +20,10 @@ export interface Authentication {
   enabled: boolean;
 }
 
+export interface Authorization {
+  requireAdmission?: boolean;
+}
+
 export interface RateLimit {
   description?: string;
   period: number;
@@ -219,6 +223,7 @@ export interface Mirroring {
 
 export interface Settings {
   authentication: Authentication;
+  authorization?: Authorization;
   info: Info;
   payments?: Payments;
   paymentsProcessors?: PaymentsProcessors;
