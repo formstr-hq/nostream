@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 import { path } from 'ramda'
 
 import { createSettings } from '../../factories/settings-factory'
@@ -77,6 +79,13 @@ export const rootRequestHandler = (request: Request, response: Response, next: N
 
   if (admissionFeeEnabled) {
     response.redirect(301, '/invoices')
+  } else if (settings.authorization?.requireAdmission) {
+    const htmlPath = join(process.cwd(), 'resources', 'index.html')
+    const html = readFileSync(htmlPath, { encoding: 'utf-8' })
+      .replace(/{{name}}/g, settings.info.name)
+      .replace(/{{description}}/g, settings.info.description)
+      .replace(/{{relay_url}}/g, settings.info.relay_url)
+    response.status(200).setHeader('content-type', 'text/html; charset=utf-8').send(html)
   } else {
     response.status(200).setHeader('content-type', 'text/plain; charset=utf8').send('Please use a Nostr client to connect.')
   }
