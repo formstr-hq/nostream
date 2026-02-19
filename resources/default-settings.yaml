@@ -1,7 +1,7 @@
 info:
-  relay_url: wss://nostream.your-domain.com
+  relay_url: wss://relay.formstr.app
   name: relay.formstr.app
-  description: A nostr relay written in Typescript.
+  description: A nostr relay for your professional needs
   pubkey: replace-with-your-pubkey-in-hex
   contact: mailto:operator@your-domain.com
 payments:
