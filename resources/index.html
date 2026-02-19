@@ -4,171 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{name}}</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Hero ── */
-    .hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 1.5rem 3rem;
-      text-align: center;
-    }
-
-    /* ── Logo ── */
-    .logo-wrap {
-      margin-bottom: 2.5rem;
-    }
-    .logo-wrap svg {
-      width: 158px;
-      height: auto;
-    }
-
-    /* ── Status badge ── */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 100px;
-      padding: 0.3rem 1rem;
-      font-size: 0.75rem;
-      color: #888;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      margin-bottom: 1.75rem;
-    }
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      background: #4ade80;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* ── Headings ── */
-    h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 1rem;
-    }
-
-    .subtitle {
-      font-size: 1.05rem;
-      color: #666;
-      max-width: 460px;
-      line-height: 1.65;
-      margin-bottom: 2.75rem;
-    }
-
-    /* ── CTA ── */
-    .cta-wrap {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 3.5rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 8px;
-      padding: 0.72rem 1.6rem;
-      font-size: 0.92rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.15s, border-color 0.15s, color 0.15s;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #fff;
-      color: #000;
-      border: 1px solid transparent;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-secondary {
-      background: transparent;
-      color: #777;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.3); color: #bbb; }
-
-    /* ── Feature pills ── */
-    .features {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 520px;
-      margin-bottom: 3rem;
-    }
-
-    .feature {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.85rem;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 100px;
-      font-size: 0.8rem;
-      color: #666;
-    }
-    .feature-check {
-      color: #4ade80;
-      font-size: 0.7rem;
-    }
-
-    /* ── Relay URL ── */
-    .relay-url-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.55rem 1.1rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 8px;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.82rem;
-      color: #555;
-    }
-    .relay-url-label {
-      color: #333;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.78rem;
-      color: #2a2a2a;
-      border-top: 1px solid rgba(255,255,255,0.04);
-    }
-    footer a { color: #333; text-decoration: none; }
-    footer a:hover { color: #555; }
-  </style>
+  <link rel="stylesheet" href="/css/landing.css">
 </head>
 <body>
   <main class="hero">
@@ -193,14 +29,16 @@
     <div class="cta-wrap">
       <a href="#PLACEHOLDER_FORM_URL" class="btn btn-primary">
         Request Access
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="btn-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
         </svg>
       </a>
-      <a href="https://nostr.com" target="_blank" rel="noopener" class="btn btn-secondary">
+      <a href="https://nostr.com" target="_blank" rel="noopener" class="btn btn-ghost">
         What is Nostr?
       </a>
     </div>
+
+    <div class="divider"></div>
 
     <div class="features">
       <span class="feature"><span class="feature-check">✓</span> NIP-42 Authenticated</span>
@@ -209,8 +47,8 @@
     </div>
 
     <div class="relay-url-wrap">
-      <span class="relay-url-label">relay</span>
-      <span>{{relay_url}}</span>
+      <span class="relay-label">relay</span>
+      <span class="relay-address">{{relay_url}}</span>
     </div>
 
   </main>

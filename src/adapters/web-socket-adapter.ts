@@ -381,6 +381,7 @@ export class WebSocketAdapter
       !this.authenticated &&
       message[0] !== MessageType.AUTH &&
       message[0] !== MessageType.CLOSE &&
+      message[0] !== MessageType.REQ &&
       this.settings().authentication.enabled
     ) {
       switch (message[0]) {
