@@ -39,3 +39,11 @@ dist
 
 # Docker Compose overrides
 docker-compose.overrides.yml
+
+# Yggdrasil keys and node registry — contains private keys, never commit
+yggdrasil-config/yggdrasil.conf
+# nodes.json is safe to commit (public keys only) but excluded here for simplicity
+yggdrasil-config/nodes.json
+
+# Storage node data directory
+data/

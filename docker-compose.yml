@@ -87,9 +87,14 @@ services:
       - ${PWD}/.nostr/data:/var/lib/postgresql/
       - ${PWD}/.nostr/db-logs:/var/log/postgresql
       - ${PWD}/postgresql.conf:/postgresql.conf
+      - ${PWD}/pg_hba.conf:/pg_hba.conf
+    ports:
+      # Exposed on host so FDW queries can reach storage nodes via Yggdrasil.
+      # pg_hba.conf restricts remote access to the Yggdrasil address range.
+      - "5432:5432"
     networks:
       default:
-    command: postgres -c 'config_file=/postgresql.conf'
+    command: postgres -c 'config_file=/postgresql.conf' -c 'hba_file=/pg_hba.conf'
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U nostr_ts_relay"]
@@ -97,6 +102,24 @@ services:
       timeout: 5s
       retries: 5
       start_period: 360s
+
+  nostream-yggdrasil:
+    build:
+      context: ./docker/yggdrasil
+    container_name: nostream-yggdrasil
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      # Bind mount so add-storage-node.sh / remove-storage-node.sh can edit
+      # the whitelist on the host without needing docker exec
+      - ${PWD}/yggdrasil-config:/etc/yggdrasil
+    environment:
+      YGGDRASIL_LISTEN_PORT: ${YGGDRASIL_LISTEN_PORT:-12345}
+    entrypoint: /coordinator-entrypoint.sh
+    restart: always
 
   nostream-cache:
     image: redis:7.0.5-alpine3.16
@@ -138,10 +161,12 @@ services:
 networks:
   default:
     name: nostream
+    enable_ipv6: true
     ipam:
       driver: default
       config:
         - subnet: 10.10.10.0/24
+        - subnet: fd00:dead:beef::/48
 
 volumes:
   cache:

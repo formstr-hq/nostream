@@ -41,6 +41,10 @@ The project master repository is available on [GitHub](https://github.com/cameri
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Xfk5F7?referralCode=Kfv2ly)
 
+## Distributed Storage
+
+nostream supports distributing event storage across multiple remote PostgreSQL nodes over an encrypted [Yggdrasil](https://yggdrasil-network.github.io/) mesh network, with NAT traversal built in. See [DISTRIBUTED-STORAGE.md](DISTRIBUTED-STORAGE.md) for the full guide.
+
 ## Features
 
 NIPs with a relay-specific implementation are listed here.

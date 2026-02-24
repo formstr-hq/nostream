@@ -1,0 +1,89 @@
+# nostream storage node
+#
+# Run this on a remote machine to provide storage for the nostream relay.
+#
+# Required environment variables (set in .env or export before running):
+#   COORDINATOR_PEER   TCP peer address of the coordinator's Yggdrasil node
+#                      Example: tcp://1.2.3.4:12345
+#   STORAGE_DB_PASSWORD  Password for the nostr_ts_relay user (share with coordinator operator)
+#
+# Quick start:
+#   cp .env.storage.example .env
+#   # edit .env with your coordinator peer address and a strong password
+#   docker compose -f docker-compose.storage.yml up -d
+#   # note the Yggdrasil address printed in yggdrasil logs
+#   # give that address + your password to the coordinator operator
+#   # coordinator operator runs: scripts/add-storage-node.sh <ygg-addr> <node-name> <password>
+
+services:
+  storage-db:
+    image: postgres:15
+    container_name: nostream-storage-db
+    environment:
+      POSTGRES_DB: nostr_ts_relay
+      POSTGRES_USER: nostr_ts_relay
+      POSTGRES_PASSWORD: ${STORAGE_DB_PASSWORD:?STORAGE_DB_PASSWORD is required}
+    volumes:
+      - ${PWD}/data:/var/lib/postgresql/
+      - ${PWD}/storage/postgresql.conf:/postgresql.conf
+      - ${PWD}/storage/pg_hba.conf:/pg_hba.conf
+    ports:
+      # Exposed on host so coordinator can reach us via Yggdrasil
+      - "5432:5432"
+    command: postgres -c 'config_file=/postgresql.conf' -c 'hba_file=/pg_hba.conf'
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nostr_ts_relay"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  storage-yggdrasil:
+    build:
+      context: ./docker/yggdrasil
+    container_name: nostream-storage-yggdrasil
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${PWD}/yggdrasil-config:/etc/yggdrasil
+    environment:
+      COORDINATOR_PEER: ${COORDINATOR_PEER:?COORDINATOR_PEER is required}
+      # Coordinator's Yggdrasil public key — only this node can peer with us
+      COORDINATOR_PUBLIC_KEY: ${COORDINATOR_PUBLIC_KEY:?COORDINATOR_PUBLIC_KEY is required}
+    entrypoint: /storage-entrypoint.sh
+    restart: always
+
+  storage-init:
+    image: postgres:15
+    container_name: nostream-storage-init
+    depends_on:
+      storage-db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${STORAGE_DB_PASSWORD}
+    volumes:
+      - ${PWD}/scripts/storage-init.sql:/storage-init.sql
+    entrypoint:
+      - sh
+      - -c
+      - |
+        psql -h storage-db -U nostr_ts_relay -d nostr_ts_relay -f /storage-init.sql && \
+        echo "Storage node initialised."
+    restart: on-failure
+    networks:
+      default:
+
+networks:
+  default:
+    name: nostream-storage
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+        - subnet: fd00:cafe::/48
+
