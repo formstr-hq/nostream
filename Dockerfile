@@ -1,4 +1,4 @@
-FROM node:18-alpine3.16 AS build
+FROM node:18-alpine3.20 AS build
 
 WORKDIR /build
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:18-alpine3.16
+FROM node:18-alpine3.20
 
 LABEL org.opencontainers.image.title="Nostream"
 LABEL org.opencontainers.image.source=https://github.com/cameri/nostream
